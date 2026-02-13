@@ -1,125 +1,103 @@
-const i18n = {
+// 1. قاعدة البيانات المصححة (تم ترتيب الروابط لتناسب الصور)
+const wallpapers = [
+    { id: 1, title: "Luffy Gear 5", category: "one-piece", url: "assets/1.webp" },
+    { id: 2, title: "Naruto Sage Mode", category: "naruto", url: "assets/2.webp" }, // تم التصحيح: 2 هو ناروتو
+    { id: 3, title: "Sung Jin-Woo", category: "solo", url: "assets/3.webp" },       // تم التصحيح: 3 هو جين وو
+    { id: 4, title: "Zoro Wano", category: "one-piece", url: "assets/4.webp" },     // تم التصحيح: 4 هو زورو
+    { id: 5, title: "Goku Ultra Instinct", category: "dragon-ball", url: "assets/5.webp" },
+    { id: 9, title: "Killua Godspeed", category: "hunter", url: "assets/9.webp" },
+    
+    // إضافة شخصيات للأنميات الجديدة (يجب رفع الصور بالأرقام 11، 12، 13)
+    { id: 11, title: "Gabimaru", category: "hells-paradise", url: "assets/11.webp" },
+    { id: 12, title: "Taro Sakamoto", category: "sakamoto-days", url: "assets/12.webp" },
+    { id: 13, title: "Monica Everett", category: "silent-witch", url: "assets/13.webp" }
+];
+
+// 2. تحديث نظام اللغات والأنميات الجديدة
+const translations = {
     ar: {
-        welcome: "مرحباً بك في عالم الأنمي الأسطوري",
-        subWelcome: "أنت الآن تشاهد النسخة الأولية من تطبيقك العالمي.",
-        btnLang: "English",
-        downloadBtn: "تحميل 8K",
-        downloadDone: "تم التحميل بنجاح! ✅", // نص جديد
-        searchPlaceholder: "ابحث عن خلفيتك المفضلة...",
-        cats: { all: "الكل", onePiece: "ون بيس", naruto: "ناروتو", solo: "سولو ليفيلينج" }
+        title: "Anivaults 8K - عالم الأساطير",
+        subTitle: "استكشف وحمل خلفياتك المفضلة بأعلى جودة ممكنة.",
+        search: "ابحث عن شخصيتك المفضلة...",
+        langBtn: "English",
+        download: "تحميل 8K",
+        cats: {
+            all: "الكل", "one-piece": "ون بيس", naruto: "ناروتو", "dragon-ball": "دراغون بول",
+            aot: "هجوم العمالقة", "demon-slayer": "قاتل الشياطين", jjk: "جوجوتسو كايسن",
+            solo: "سولو ليفيلينج", hunter: "هنتر", bleach: "بليتش",
+            "hells-paradise": "جنة الجحيم", "sakamoto-days": "ساكاموتو دايز", "silent-witch": "Silent Witch",
+            "death-note": "مذكرة الموت", mha: "أكاديمية بطلي", "black-clover": "بلاك كلوفر",
+            opm: "ون بنش مان", "tokyo-ghoul": "طوكيو غول", fma: "FMA",
+            berserk: "بيرسيرك", "vinland-saga": "فينلاند ساغا", "chainsaw-man": "رجل المنشار", "blue-lock": "بلو لوك"
+        }
     },
     en: {
-        welcome: "Welcome to the Legendary Anime World",
-        subWelcome: "You are now viewing the initial version of your global app.",
-        btnLang: "العربية",
-        downloadBtn: "Download 8K",
-        downloadDone: "Downloaded Successfully! ✅", // نص جديد
-        searchPlaceholder: "Search for your favorite wallpaper...",
-        cats: { all: "All", onePiece: "One Piece", naruto: "Naruto", solo: "Solo Leveling" }
+        title: "Anivaults 8K - Legendary World",
+        subTitle: "Explore and download your favorite wallpapers in 8K.",
+        search: "Search for your favorite character...",
+        langBtn: "العربية",
+        download: "DOWNLOAD 8K",
+        cats: {
+            all: "ALL", "one-piece": "ONE PIECE", naruto: "NARUTO", "dragon-ball": "DRAGON BALL",
+            aot: "AOT", "demon-slayer": "DEMON SLAYER", jjk: "JJK",
+            solo: "SOLO LEVELING", hunter: "HUNTER", bleach: "BLEACH",
+            "hells-paradise": "HELL'S PARADISE", "sakamoto-days": "SAKAMOTO DAYS", "silent-witch": "SILENT WITCH",
+            "death-note": "DEATH NOTE", mha: "MHA", "black-clover": "BLACK CLOVER",
+            opm: "ONE PUNCH MAN", "tokyo-ghoul": "TOKYO GHOUL", fma: "FMA",
+            berserk: "BERSERK", "vinland-saga": "VINLAND SAGA", "chainsaw-man": "CHAINSAW MAN", "blue-lock": "BLUE LOCK"
+        }
     }
 };
 
 let currentLang = 'ar';
 let currentCategory = 'all';
 
-const wallpapers = [
-    { title: "Luffy Gear 5", url: "assets/1.webp", category: "onePiece" },
-    { title: "Naruto Sage", url: "assets/2.webp", category: "naruto" },
-    { title: "Solo Leveling", url: "assets/3.webp", category: "solo" },
-    { title: "Zoro Wano", url: "assets/4.webp", category: "onePiece" }
-];
+function renderUI() {
+    const bar = document.getElementById('categories-bar');
+    const categories = translations[currentLang].cats;
+    bar.innerHTML = Object.keys(categories).map(key => `
+        <button class="cat-btn ${currentCategory === key ? 'active' : ''}" onclick="filterAnime('${key}')">
+            ${categories[key]}
+        </button>
+    `).join('');
 
-function init() {
-    renderCategories();
-    renderWallpapers(wallpapers);
-    document.getElementById('lang-btn').onclick = toggleLanguage;
-    document.getElementById('search-input').oninput = (e) => {
-        const term = e.target.value.toLowerCase();
-        const filtered = wallpapers.filter(wp => 
-            wp.title.toLowerCase().includes(term) && 
-            (currentCategory === 'all' || wp.category === currentCategory)
-        );
-        renderWallpapers(filtered);
-    };
-}
-
-// --- وظيفة التحميل المطورة الجديدة ---
-function handleDownload(btnElement, url, filename) {
-    // 1. حفظ النص الأصلي للزر
-    const originalText = btnElement.innerText;
-    
-    // 2. تغيير شكل الزر للأخضر والنص للنجاح
-    btnElement.innerText = i18n[currentLang].downloadDone;
-    btnElement.classList.add('success');
-    btnElement.disabled = true; // منع الضغط المتكرر أثناء التحميل
-
-    // 3. بدء التحميل الفعلي
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = filename;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-
-    // 4. إعادة الزر لحالته الأصلية بعد ثانيتين (2000 ميلي ثانية)
-    setTimeout(() => {
-        btnElement.innerText = originalText;
-        btnElement.classList.remove('success');
-        btnElement.disabled = false;
-    }, 2000);
-}
-
-function renderWallpapers(list) {
-    const grid = document.getElementById('wallpaper-grid');
-    grid.innerHTML = "";
-    list.forEach(wp => {
-        const card = document.createElement('div');
-        card.className = 'wallpaper-card';
-        // لاحظ التغيير في استدعاء الدالة في السطر التالي (تمرير 'this')
-        card.innerHTML = `
-            <img src="${wp.url}" alt="${wp.title}" loading="lazy">
-            <div class="wp-info">
-                <h3>${wp.title}</h3>
-                <button class="download-btn" onclick="handleDownload(this, '${wp.url}', '${wp.title}.webp')">
-                    ${i18n[currentLang].downloadBtn}
-                </button>
-            </div>
-        `;
-        grid.appendChild(card);
-    });
-}
-
-function renderCategories() {
-    const container = document.getElementById('categories-bar');
-    const cats = i18n[currentLang].cats;
-    container.innerHTML = "";
-    Object.keys(cats).forEach(key => {
-        const btn = document.createElement('button');
-        btn.className = `cat-btn ${currentCategory === key ? 'active' : ''}`;
-        btn.innerText = cats[key];
-        btn.onclick = () => {
-            currentCategory = key;
-            renderCategories();
-            filterImages();
-        };
-        container.appendChild(btn);
-    });
-}
-
-function filterImages() {
     const filtered = currentCategory === 'all' ? wallpapers : wallpapers.filter(wp => wp.category === currentCategory);
-    renderWallpapers(filtered);
+    display(filtered);
 }
 
-function toggleLanguage() {
+function display(items) {
+    const grid = document.getElementById('wallpaper-grid');
+    grid.innerHTML = items.map(wp => `
+        <div class="wallpaper-card">
+            <img src="${wp.url}" alt="${wp.title}" onerror="this.src='https://via.placeholder.com/300x500?text=Image+Coming+Soon'">
+            <div class="info">
+                <h3>${wp.title}</h3>
+                <a href="${wp.url}" download class="download-btn">${translations[currentLang].download}</a>
+            </div>
+        </div>
+    `).join('');
+}
+
+function filterAnime(category) {
+    currentCategory = category;
+    renderUI();
+}
+
+function searchWallpapers() {
+    const term = document.getElementById('search-input').value.toLowerCase();
+    const filtered = wallpapers.filter(wp => wp.title.toLowerCase().includes(term));
+    display(filtered);
+}
+
+document.getElementById('lang-btn').addEventListener('click', () => {
     currentLang = currentLang === 'ar' ? 'en' : 'ar';
+    const langData = translations[currentLang];
+    document.getElementById('main-title').innerText = langData.title;
+    document.getElementById('sub-title').innerText = langData.subTitle;
+    document.getElementById('search-input').placeholder = langData.search;
+    document.getElementById('lang-btn').innerText = langData.langBtn;
     document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
-    document.getElementById('main-title').innerText = i18n[currentLang].welcome;
-    document.getElementById('sub-title').innerText = i18n[currentLang].subWelcome;
-    document.getElementById('lang-btn').innerText = i18n[currentLang].btnLang;
-    document.getElementById('search-input').placeholder = i18n[currentLang].searchPlaceholder;
-    renderCategories();
-    filterImages();
-}
+    renderUI();
+});
 
-window.onload = init;
+renderUI();
