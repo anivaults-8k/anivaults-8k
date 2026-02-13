@@ -20,11 +20,12 @@ const i18n = {
 let currentLang = 'ar';
 let currentCategory = 'all';
 
+// مصفوفة الصور تدعم الآن امتداد .webp
 const wallpapers = [
-    { title: "Luffy Gear 5", url: "assets/1.png", category: "onePiece" },
-    { title: "Naruto Sage", url: "assets/2.png", category: "naruto" },
-    { title: "Solo Leveling", url: "assets/3.png", category: "solo" },
-    { title: "Zoro Wano", url: "assets/4.png", category: "onePiece" }
+    { title: "Luffy Gear 5", url: "assets/1.webp", category: "onePiece" },
+    { title: "Naruto Sage", url: "assets/2.webp", category: "naruto" },
+    { title: "Solo Leveling", url: "assets/3.webp", category: "solo" },
+    { title: "Zoro Wano", url: "assets/4.webp", category: "onePiece" }
 ];
 
 function init() {
@@ -41,7 +42,6 @@ function init() {
     };
 }
 
-// وظيفة التحميل الحقيقية
 function downloadImage(url, filename) {
     const link = document.createElement('a');
     link.href = url;
@@ -58,10 +58,10 @@ function renderWallpapers(list) {
         const card = document.createElement('div');
         card.className = 'wallpaper-card';
         card.innerHTML = `
-            <img src="${wp.url}" alt="${wp.title}">
+            <img src="${wp.url}" alt="${wp.title}" loading="lazy">
             <div class="wp-info">
                 <h3>${wp.title}</h3>
-                <button class="download-btn" onclick="downloadImage('${wp.url}', '${wp.title}.png')">
+                <button class="download-btn" onclick="downloadImage('${wp.url}', '${wp.title}.webp')">
                     ${i18n[currentLang].downloadBtn}
                 </button>
             </div>
@@ -78,7 +78,7 @@ function renderCategories() {
         const btn = document.createElement('button');
         btn.className = `cat-btn ${currentCategory === key ? 'active' : ''}`;
         btn.innerText = cats[key];
-        btn.onclick = (e) => {
+        btn.onclick = () => {
             currentCategory = key;
             renderCategories();
             filterImages();
