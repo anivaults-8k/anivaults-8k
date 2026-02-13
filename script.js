@@ -4,6 +4,7 @@ const i18n = {
         subWelcome: "أنت الآن تشاهد النسخة الأولية من تطبيقك العالمي.",
         btnLang: "English",
         downloadBtn: "تحميل 8K",
+        downloadDone: "تم التحميل بنجاح! ✅", // نص جديد
         searchPlaceholder: "ابحث عن خلفيتك المفضلة...",
         cats: { all: "الكل", onePiece: "ون بيس", naruto: "ناروتو", solo: "سولو ليفيلينج" }
     },
@@ -12,6 +13,7 @@ const i18n = {
         subWelcome: "You are now viewing the initial version of your global app.",
         btnLang: "العربية",
         downloadBtn: "Download 8K",
+        downloadDone: "Downloaded Successfully! ✅", // نص جديد
         searchPlaceholder: "Search for your favorite wallpaper...",
         cats: { all: "All", onePiece: "One Piece", naruto: "Naruto", solo: "Solo Leveling" }
     }
@@ -20,7 +22,6 @@ const i18n = {
 let currentLang = 'ar';
 let currentCategory = 'all';
 
-// مصفوفة الصور تدعم الآن امتداد .webp
 const wallpapers = [
     { title: "Luffy Gear 5", url: "assets/1.webp", category: "onePiece" },
     { title: "Naruto Sage", url: "assets/2.webp", category: "naruto" },
@@ -42,13 +43,30 @@ function init() {
     };
 }
 
-function downloadImage(url, filename) {
+// --- وظيفة التحميل المطورة الجديدة ---
+function handleDownload(btnElement, url, filename) {
+    // 1. حفظ النص الأصلي للزر
+    const originalText = btnElement.innerText;
+    
+    // 2. تغيير شكل الزر للأخضر والنص للنجاح
+    btnElement.innerText = i18n[currentLang].downloadDone;
+    btnElement.classList.add('success');
+    btnElement.disabled = true; // منع الضغط المتكرر أثناء التحميل
+
+    // 3. بدء التحميل الفعلي
     const link = document.createElement('a');
     link.href = url;
     link.download = filename;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+
+    // 4. إعادة الزر لحالته الأصلية بعد ثانيتين (2000 ميلي ثانية)
+    setTimeout(() => {
+        btnElement.innerText = originalText;
+        btnElement.classList.remove('success');
+        btnElement.disabled = false;
+    }, 2000);
 }
 
 function renderWallpapers(list) {
@@ -57,11 +75,12 @@ function renderWallpapers(list) {
     list.forEach(wp => {
         const card = document.createElement('div');
         card.className = 'wallpaper-card';
+        // لاحظ التغيير في استدعاء الدالة في السطر التالي (تمرير 'this')
         card.innerHTML = `
             <img src="${wp.url}" alt="${wp.title}" loading="lazy">
             <div class="wp-info">
                 <h3>${wp.title}</h3>
-                <button class="download-btn" onclick="downloadImage('${wp.url}', '${wp.title}.webp')">
+                <button class="download-btn" onclick="handleDownload(this, '${wp.url}', '${wp.title}.webp')">
                     ${i18n[currentLang].downloadBtn}
                 </button>
             </div>

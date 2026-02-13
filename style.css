@@ -1,6 +1,7 @@
 :root {
     --bg-color: #0d0d0d;
-    --accent-color: #ffcc00;
+    --accent-color: #ffcc00; /* الأصفر الأساسي */
+    --success-color: #28a745; /* الأخضر الجديد للنجاح */
     --text-color: #ffffff;
     --card-bg: #1a1a1a;
 }
@@ -74,9 +75,19 @@ h1 { color: var(--accent-color); font-size: 2.2rem; }
 
 .wp-info { padding: 15px; text-align: center; }
 
+/* تنسيق زر التحميل الأساسي */
 .download-btn {
-    background: var(--accent-color); border: none; padding: 12px;
+    background: var(--accent-color);
+    border: none; padding: 12px;
     border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%;
+    transition: all 0.3s ease; /* حركة ناعمة */
+}
+
+/* تنسيق الزر عند النجاح (سيتم تفعيله بالجافا سكريبت) */
+.download-btn.success {
+    background-color: var(--success-color) !important; /* تحويل للأخضر */
+    color: white;
+    transform: scale(0.95); /* تصغير بسيط كتأثير للضغطة */
 }
 
 @media (max-width: 600px) {
