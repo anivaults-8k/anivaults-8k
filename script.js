@@ -1,3 +1,4 @@
+// 1. قاعدة البيانات المصححة (تأكد من مطابقة الأرقام للصور في assets)
 const wallpapers = [
     { id: 1, title: "Luffy Gear 5", category: "one-piece", url: "assets/1.webp" },
     { id: 2, title: "Naruto Sage Mode", category: "naruto", url: "assets/2.webp" },
@@ -10,6 +11,7 @@ const wallpapers = [
     { id: 13, title: "Monica Everett", category: "silent-witch", url: "assets/13.webp" }
 ];
 
+// 2. نظام الترجمة الشامل لـ 23 قسم
 const translations = {
     ar: {
         title: "Anivaults 8K - عالم الأساطير",
@@ -53,11 +55,13 @@ let currentCategory = 'all';
 function renderUI() {
     const bar = document.getElementById('categories-bar');
     const categories = translations[currentLang].cats;
+    
     bar.innerHTML = Object.keys(categories).map(key => `
         <button class="cat-btn ${currentCategory === key ? 'active' : ''}" onclick="filterAnime('${key}')">
             ${categories[key]}
         </button>
     `).join('');
+
     const filtered = currentCategory === 'all' ? wallpapers : wallpapers.filter(wp => wp.category === currentCategory);
     display(filtered);
 }
@@ -85,7 +89,7 @@ document.querySelector('.close-modal').onclick = () => document.getElementById('
 
 window.onscroll = () => {
     const btn = document.getElementById("scroll-top");
-    btn.style.display = (document.body.scrollTop > 400 || document.documentElement.scrollTop > 400) ? "block" : "none";
+    btn.style.display = (document.body.scrollTop > 350 || document.documentElement.scrollTop > 350) ? "block" : "none";
 };
 
 document.getElementById("scroll-top").onclick = () => window.scrollTo({top: 0, behavior: 'smooth'});
@@ -106,13 +110,13 @@ function searchWallpapers() {
 }
 
 document.getElementById('lang-btn').addEventListener('click', () => {
-    currentLang = (currentLang === 'ar') ? 'en' : 'ar';
+    currentLang = currentLang === 'ar' ? 'en' : 'ar';
     const langData = translations[currentLang];
     document.getElementById('main-title').innerText = langData.title;
     document.getElementById('sub-title').innerText = langData.subTitle;
     document.getElementById('search-input').placeholder = langData.search;
     document.getElementById('lang-btn').innerText = langData.langBtn;
-    document.documentElement.dir = (currentLang === 'ar') ? 'rtl' : 'ltr';
+    document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
     renderUI();
 });
 
