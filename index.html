@@ -3,26 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <title>Anivaults 8K - أكبر مكتبة خلفيات أنمي بدقة فائقة</title>
-    <meta name="description" content="حمل أفضل خلفيات الأنمي الأسطورية بجودة 8K و 4K. ون بيس، ناروتو، سولو ليفيلينج والمزيد في Anivaults 8K.">
-    <meta name="keywords" content="خلفيات أنمي, 8K Anime Wallpapers, One Piece 8K, Naruto 4K, Solo Leveling backgrounds, تحميل خلفيات أنمي">
-    <meta name="author" content="Anivaults 8K Team">
-    
-    <meta property="og:title" content="Anivaults 8K - عالم الأساطير">
-    <meta property="og:description" content="استكشف وحمل خلفياتك المفضلة بأعلى جودة ممكنة.">
-    <meta property="og:image" content="./logo-8k.png">
-    <meta property="og:url" content="https://anivaults-8k.github.io/">
-
+    <title>Anivaults 8K - تطبيق الأساطير الذهبي</title>
     <link rel="icon" href="./logo-8k.png?v=5" type="image/png">
-
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
     <header>
-        <div class="logo">ANIVAULTS <span>8K</span></div>
+        <div class="logo" id="main-logo">
+            <img src="logo-8k.png?v=5" alt="Anivaults Logo" class="header-logo">
+            ANIVAULTS <span>8K</span>
+        </div>
+        <nav class="nav-links">
+            <span onclick="showPage('about')" id="nav-about">من نحن</span>
+            <span onclick="showPage('privacy')" id="nav-privacy">سياسة الخصوصية</span>
+            <span onclick="showPage('contact')" id="nav-contact">اتصل بنا</span>
+        </nav>
         <button id="lang-btn">English</button>
     </header>
 
@@ -34,22 +31,33 @@
     <section class="controls">
         <div class="categories-container" id="categories-bar"></div>
         <div class="search-container">
-            <input type="text" id="search-input" placeholder="ابحث عن خلفيتك..." onkeyup="searchWallpapers()">
+            <input type="text" id="search-input" placeholder="ابحث عن شخصيتك..." onkeyup="searchWallpapers()">
         </div>
     </section>
 
     <main id="wallpaper-grid"></main>
 
-    <div id="image-modal" class="modal">
-        <span class="close-modal">&times;</span>
+    <div id="info-modal" class="modal" style="display: none;">
+        <div class="modal-content info-content">
+            <span class="close-modal" onclick="closeInfoModal()">&times;</span>
+            <div id="info-body"></div>
+        </div>
+    </div>
+
+    <div id="image-modal" class="modal" style="display: none;">
+        <span class="close-modal" onclick="document.getElementById('image-modal').style.display='none'">&times;</span>
         <img class="modal-content" id="full-image">
     </div>
 
-    <button id="scroll-top" title="Go to top">↑</button>
-
-    <div id="toast-container">جاري بدء التحميل...</div>
+    <button id="scroll-top">↑</button>
+    <div id="toast-container">جاري التحميل...</div>
 
     <footer>
+        <div class="footer-links">
+            <span onclick="showPage('about')" id="foot-about">من نحن</span> | 
+            <span onclick="showPage('privacy')" id="foot-privacy">سياسة الخصوصية</span> | 
+            <span onclick="showPage('contact')" id="foot-contact">اتصل بنا</span>
+        </div>
         <p>© 2026 Anivaults 8K - جميع الحقوق محفوظة</p>
     </footer>
 

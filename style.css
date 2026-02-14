@@ -1,144 +1,89 @@
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    font-family: 'Cairo', sans-serif;
-    scroll-behavior: smooth;
-}
-
-body {
-    background: radial-gradient(circle at center, #1a1a1a 0%, #050505 100%);
-    background-attachment: fixed;
-    color: white;
-    line-height: 1.6;
-}
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; scroll-behavior: smooth; }
+body { background: #050505; color: white; min-height: 100vh; overflow-x: hidden; }
 
 header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 5%;
-    background: rgba(0, 0, 0, 0.95);
-    border-bottom: 2px solid #ffcc00;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    backdrop-filter: blur(10px);
+    display: flex; justify-content: space-between; align-items: center; padding: 10px 5%;
+    background: rgba(0, 0, 0, 0.95); border-bottom: 2px solid #ffcc00;
+    position: sticky; top: 0; z-index: 100; backdrop-filter: blur(15px);
 }
 
-.logo {
-    display: flex;
-    align-items: center;
-    font-size: 1.8rem;
+.logo { display: flex; align-items: center; font-size: 1.6rem; font-weight: bold; gap: 10px; cursor: pointer; }
+.header-logo { height: 60px; width: auto; filter: drop-shadow(0 0 8px rgba(255, 204, 0, 0.3)); transition: 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
+.logo-refresh { transform: rotate(360deg) scale(1.2); }
+
+.nav-links { display: flex; gap: 20px; font-size: 0.9rem; color: #ccc; }
+.nav-links span { cursor: pointer; transition: 0.3s; }
+.nav-links span:hover { color: #ffcc00; text-shadow: 0 0 8px #ffcc00; }
+
+#lang-btn { background: #1a1a1a; color: #ffcc00; border: 1px solid #ffcc00; padding: 6px 15px; border-radius: 20px; cursor: pointer; font-weight: bold; transition: 0.3s; }
+
+.welcome-box { text-align: center; padding: 50px 20px; }
+.welcome-box h1 { font-size: 2.5rem; color: #ffcc00; margin-bottom: 10px; }
+
+/* تأثير قائمة الأنمي الذهبية */
+.categories-container { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; padding: 20px; margin: 0 auto; max-width: 1200px; }
+.cat-btn { 
+    background: #111; 
+    color: #ffcc00; /* جعل النص أصفر لكل القوائم */
+    border: 1px solid #ffcc0044; /* حدود صفراء خفيفة */
+    padding: 8px 18px; border-radius: 30px; cursor: pointer; 
+    transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+    opacity: 0; animation: fadeSlide 0.5s ease-out forwards;
+}
+@keyframes fadeSlide {
+    from { opacity: 0; transform: translateX(-20px) scale(0.9); }
+    to { opacity: 1; transform: translateX(0) scale(1); }
+}
+
+.cat-btn:hover { background: #222; transform: scale(1.05); border-color: #ffcc00; box-shadow: 0 0 10px #ffcc0044; }
+
+/* تمييز القسم النشط (مثل الكل) باللون الأصفر الكامل */
+.cat-btn.active { 
+    background: #ffcc00 !important; 
+    color: black !important; 
+    border-color: white !important; 
+    transform: scale(1.15); 
+    box-shadow: 0 0 20px rgba(255, 204, 0, 0.6); 
     font-weight: bold;
-    gap: 15px;
-}
-
-/* تنسيق الشعار ليكون واضحاً وكبيراً */
-.header-logo {
-    height: 65px;
-    width: auto;
-    filter: drop-shadow(0 0 8px rgba(255, 204, 0, 0.3));
-    transition: 0.3s;
-}
-
-.header-logo:hover { transform: scale(1.1) rotate(5deg); }
-
-.logo span { color: #ffcc00; }
-
-#lang-btn {
-    background: #1a1a1a;
-    color: #ffcc00;
-    border: 1px solid #ffcc00;
-    padding: 8px 18px;
-    border-radius: 20px;
-    cursor: pointer;
-    font-weight: bold;
-}
-
-.welcome-box { text-align: center; padding: 70px 20px; }
-.welcome-box h1 { font-size: 2.8rem; color: #ffcc00; margin-bottom: 10px; }
-
-.categories-container {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    flex-wrap: wrap;
-    padding: 20px;
-    max-width: 1200px;
-    margin: 0 auto;
-}
-
-.cat-btn {
-    background: rgba(255, 255, 255, 0.05);
-    color: #ccc;
-    border: 1px solid #333;
-    padding: 8px 18px;
-    border-radius: 25px;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.cat-btn:hover, .cat-btn.active {
-    background: #ffcc00;
-    color: black;
-    box-shadow: 0 0 15px rgba(255, 204, 0, 0.3);
 }
 
 .search-container { text-align: center; margin-bottom: 40px; }
-#search-input {
-    width: 80%;
-    max-width: 500px;
-    padding: 14px 20px;
-    border-radius: 30px;
-    border: none;
-    background: #222;
-    color: white;
+#search-input { width: 85%; max-width: 500px; padding: 14px 22px; border-radius: 40px; border: 1px solid #333; background: #111; color: white; outline: none; }
+
+#wallpaper-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; padding: 0 5% 60px; }
+.wallpaper-card { background: #0f0f0f; border-radius: 15px; overflow: hidden; transition: 0.4s; border: 1px solid #222; }
+.wallpaper-card img { width: 100%; height: 450px; object-fit: cover; cursor: pointer; transition: 0.5s; }
+.wallpaper-card:hover { border-color: #ffcc00; transform: translateY(-10px); }
+
+/* زر التحميل والنبض الذهبي */
+.download-btn { 
+    background: #ffcc00; color: black; padding: 10px 20px; border-radius: 8px; 
+    text-decoration: none; font-weight: bold; flex: 1; font-size: 0.85rem;
+    transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    animation: pulseGlow 2s infinite;
 }
-
-#wallpaper-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 25px;
-    padding: 0 5%;
+@keyframes pulseGlow {
+    0% { box-shadow: 0 0 0 0 rgba(255, 204, 0, 0.4); }
+    70% { box-shadow: 0 0 0 12px rgba(255, 204, 0, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(255, 204, 0, 0); }
 }
+.download-btn:hover { transform: scale(1.1); filter: brightness(1.2); }
 
-.wallpaper-card {
-    background: #111;
-    border-radius: 15px;
-    overflow: hidden;
-    transition: 0.4s;
-    border: 1px solid #222;
-    cursor: pointer;
+/* إعادة حركة زر المشاركة */
+.share-btn { 
+    background: #222; color: #ffcc00; border: 1px solid #ffcc00; 
+    padding: 10px 20px; border-radius: 8px; cursor: pointer; 
+    font-size: 0.85rem; transition: 0.3s ease-in-out;
 }
+.share-btn:hover { background: #ffcc00; color: black; transform: scale(1.05); }
+.share-btn:active { transform: scale(0.9); }
 
-.wallpaper-card:hover { transform: translateY(-10px); border-color: #ffcc00; }
-.wallpaper-card img { width: 100%; height: 420px; object-fit: cover; transition: 0.5s; }
-.wallpaper-card:hover img { transform: scale(1.08); }
+.modal { display: none; position: fixed; z-index: 1000; padding: 50px 0; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.96); align-items: center; justify-content: center; }
+.info-content { background: #111; padding: 40px; border: 1px solid #ffcc00; color: #ccc; max-width: 600px; width: 90%; border-radius: 20px; text-align: center; }
+.close-modal { position: absolute; top: 20px; right: 30px; color: #fff; font-size: 45px; cursor: pointer; }
 
-.info { padding: 15px; text-align: center; }
+#scroll-top { display: none; position: fixed; bottom: 30px; right: 30px; background: #ffcc00; border-radius: 50%; padding: 15px; border: none; z-index: 99; }
+#toast-container { position: fixed; bottom: -80px; left: 50%; transform: translateX(-50%); background: #ffcc00; color: #000; padding: 12px 30px; border-radius: 40px; font-weight: bold; transition: 0.5s; z-index: 1000; }
+#toast-container.show { bottom: 40px; }
 
-.download-btn {
-    display: inline-block;
-    margin-top: 10px;
-    background: #ffcc00;
-    color: black;
-    padding: 10px 22px;
-    border-radius: 5px;
-    text-decoration: none;
-    font-weight: bold;
-}
-
-.download-btn:active { transform: scale(0.9); }
-
-/* Modal & UI Elements */
-.modal { display: none; position: fixed; z-index: 1000; padding-top: 60px; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); }
-.modal-content { margin: auto; display: block; max-width: 85%; max-height: 85%; border-radius: 10px; animation: zoom 0.3s; border: 2px solid #ffcc00; }
-@keyframes zoom { from {transform:scale(0.8)} to {transform:scale(1)} }
-.close-modal { position: absolute; top: 20px; right: 35px; color: #fff; font-size: 40px; cursor: pointer; }
-
-#scroll-top { display: none; position: fixed; bottom: 30px; right: 30px; background: #ffcc00; border: none; padding: 15px; border-radius: 50%; cursor: pointer; font-size: 1.2rem; }
-#toast-container { position: fixed; bottom: -60px; left: 50%; transform: translateX(-50%); background: #ffcc00; color: #000; padding: 14px 28px; border-radius: 35px; font-weight: bold; transition: 0.5s; z-index: 1000; }
-#toast-container.show { bottom: 35px; }
-
-footer { text-align: center; padding: 50px; color: #333; }
+footer { text-align: center; padding: 50px; color: #444; border-top: 1px solid #111; }
