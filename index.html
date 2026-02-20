@@ -1,65 +1,97 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anivaults 8K - تطبيق الأساطير الذهبي</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Anivaults 8K - Legendary World</title>
     <link rel="icon" href="./logo-8k.png?v=5" type="image/png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
+    <div id="cursor-glow"></div>
 
     <header>
-        <div class="logo" id="main-logo">
-            <img src="logo-8k.png?v=5" alt="Anivaults Logo" class="header-logo">
+        <div class="logo" id="main-logo" onclick="location.reload()">
+            <img src="logo-8k.png?v=5" alt="Anivaults 8K" class="header-logo">
             ANIVAULTS <span>8K</span>
         </div>
         <nav class="nav-links">
-            <span onclick="showPage('about')" id="nav-about">من نحن</span>
-            <span onclick="showPage('privacy')" id="nav-privacy">سياسة الخصوصية</span>
-            <span onclick="showPage('contact')" id="nav-contact">اتصل بنا</span>
+            <span class="nav-btn" onclick="showArticle('about')">About Us</span>
+            <span class="nav-btn" onclick="showArticle('privacy')">Privacy Policy</span>
+            <span class="nav-btn" onclick="showArticle('contact')">Contact Us</span>
         </nav>
-        <button id="lang-btn">English</button>
     </header>
 
-    <div class="welcome-box">
-        <h1 id="main-title">مرحباً بك في عالم الأنمي الأسطوري</h1>
-        <p id="sub-title">استكشف وحمل خلفياتك المفضلة بأعلى جودة ممكنة.</p>
+    <main>
+        <section class="welcome-box">
+            <h1>Anivaults 8K - Legendary World</h1>
+            <p>
+                The <b class="gold">#1 anime & manga wallpaper hub</b>—featuring stunning <b class="gold">8K quality</b>, battery-saving <b class="gold">pure black wallpapers</b>, and a massive variety for every anime fan.
+            </p>
+        </section>
+
+        <section class="controls">
+            <div class="search-box-wrapper">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" id="search-input" placeholder="Search for any legend, anime, or character..." onkeyup="searchWallpapers()">
+            </div>
+        </section>
+
+        <div id="wallpaper-grid"></div>
+    </main>
+
+    <div id="ad-modal" class="modal">
+        <div class="modal-backdrop"></div>
+        <div class="modal-card ad-card">
+            <div class="scanner-line"></div>
+            <i class="fas fa-microchip ad-icon"></i>
+            <h3 id="ad-title">Processing 8K Textures...</h3>
+            <p class="ad-subtitle">Securing premium connection to Anivaults servers.</p>
+            <div class="progress-container"><div id="progress-bar" class="progress-bar"></div></div>
+            <div id="ad-timer" class="timer">Wait 5s...</div>
+        </div>
     </div>
 
-    <section class="controls">
-        <div class="categories-container" id="categories-bar"></div>
-        <div class="search-container">
-            <input type="text" id="search-input" placeholder="ابحث عن شخصيتك..." onkeyup="searchWallpapers()">
-        </div>
-    </section>
-
-    <main id="wallpaper-grid"></main>
-
-    <div id="info-modal" class="modal" style="display: none;">
-        <div class="modal-content info-content">
-            <span class="close-modal" onclick="closeInfoModal()">&times;</span>
-            <div id="info-body"></div>
+    <div id="image-modal" class="modal">
+        <div class="modal-backdrop" onclick="closeModal()"></div>
+        <div class="preview-container">
+            <div class="phone-frame">
+                <div class="phone-notch"></div>
+                <div class="phone-screen">
+                    <img id="full-image" src="" alt="8K Preview">
+                    <div class="phone-lockscreen-overlay">
+                        <div class="time">10:10</div>
+                        <div class="date">Friday, February 20</div>
+                    </div>
+                </div>
+                <div class="phone-home-bar"></div>
+            </div>
+            <button class="exit-btn" onclick="closeModal()"><i class="fas fa-times-circle"></i> CLOSE PREVIEW</button>
         </div>
     </div>
 
-    <div id="image-modal" class="modal" style="display: none;">
-        <span class="close-modal" onclick="document.getElementById('image-modal').style.display='none'">&times;</span>
-        <img class="modal-content" id="full-image">
+    <div id="success-modal" class="modal">
+        <div class="modal-backdrop" onclick="closeSuccess()"></div>
+        <div class="success-card">
+            <div class="success-glow"></div>
+            <i class="fas fa-crown crown-icon"></i>
+            <h2 class="success-title">Congratulations!</h2>
+            <p class="success-text">You have successfully unlocked a <b class="gold">Limited Edition 8K Masterpiece</b>.</p>
+            <p class="rare-text">This premium asset is now yours for free.</p>
+            <h3 class="enjoy-text">Enjoy Your Legend</h3>
+            <button class="glow-btn-success" onclick="closeSuccess()">AWESOME!</button>
+        </div>
     </div>
 
-    <button id="scroll-top">↑</button>
-    <div id="toast-container">جاري التحميل...</div>
-
-    <footer>
-        <div class="footer-links">
-            <span onclick="showPage('about')" id="foot-about">من نحن</span> | 
-            <span onclick="showPage('privacy')" id="foot-privacy">سياسة الخصوصية</span> | 
-            <span onclick="showPage('contact')" id="foot-contact">اتصل بنا</span>
+    <div id="article-modal" class="modal">
+        <div class="modal-backdrop" onclick="closeArticle()"></div>
+        <div class="article-card">
+            <div id="article-content"></div>
+            <button class="exit-btn" onclick="closeArticle()" style="margin-top:40px; width:100%;"><i class="fas fa-arrow-left"></i> RETURN TO VAULT</button>
         </div>
-        <p>© 2026 Anivaults 8K - جميع الحقوق محفوظة</p>
-    </footer>
+    </div>
 
     <script src="script.js"></script>
 </body>

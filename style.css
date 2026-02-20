@@ -1,89 +1,406 @@
-* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; scroll-behavior: smooth; }
-body { background: #050505; color: white; min-height: 100vh; overflow-x: hidden; }
-
-header {
-    display: flex; justify-content: space-between; align-items: center; padding: 10px 5%;
-    background: rgba(0, 0, 0, 0.95); border-bottom: 2px solid #ffcc00;
-    position: sticky; top: 0; z-index: 100; backdrop-filter: blur(15px);
+/* =========================================
+   GLOBAL VARIABLES & RESET
+   ========================================= */
+:root { 
+    --gold: #ffcc00; 
+    --gold-dark: #b38f00;
+    --dark: #000000; 
+    --card-bg: #0a0a0a; 
+    --text-main: #ffffff;
+    --text-muted: #888888;
 }
 
-.logo { display: flex; align-items: center; font-size: 1.6rem; font-weight: bold; gap: 10px; cursor: pointer; }
-.header-logo { height: 60px; width: auto; filter: drop-shadow(0 0 8px rgba(255, 204, 0, 0.3)); transition: 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
-.logo-refresh { transform: rotate(360deg) scale(1.2); }
+* { 
+    box-sizing: border-box; 
+    margin: 0; 
+    padding: 0; 
+    font-family: 'Poppins', sans-serif; 
+}
 
-.nav-links { display: flex; gap: 20px; font-size: 0.9rem; color: #ccc; }
-.nav-links span { cursor: pointer; transition: 0.3s; }
-.nav-links span:hover { color: #ffcc00; text-shadow: 0 0 8px #ffcc00; }
+body { 
+    background-color: var(--dark); 
+    color: var(--text-main); 
+    overflow-x: hidden; 
+    scroll-behavior: smooth; 
+}
 
-#lang-btn { background: #1a1a1a; color: #ffcc00; border: 1px solid #ffcc00; padding: 6px 15px; border-radius: 20px; cursor: pointer; font-weight: bold; transition: 0.3s; }
+.gold { color: var(--gold); }
 
-.welcome-box { text-align: center; padding: 50px 20px; }
-.welcome-box h1 { font-size: 2.5rem; color: #ffcc00; margin-bottom: 10px; }
+/* Custom Scrollbar */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--dark); }
+::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: var(--gold); }
 
-/* تأثير قائمة الأنمي الذهبية */
-.categories-container { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; padding: 20px; margin: 0 auto; max-width: 1200px; }
-.cat-btn { 
+/* =========================================
+   INTERACTIVE CURSOR GLOW
+   ========================================= */
+#cursor-glow { 
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    width: 500px; 
+    height: 500px; 
+    background: radial-gradient(circle, rgba(255, 204, 0, 0.04) 0%, transparent 70%); 
+    border-radius: 50%; 
+    pointer-events: none; 
+    z-index: 1; 
+    transform: translate(-50%, -50%); 
+    transition: transform 0.1s ease-out; 
+}
+
+/* =========================================
+   HEADER & NAVIGATION
+   ========================================= */
+header { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    padding: 15px 5%; 
+    background: rgba(0,0,0,0.95); 
+    border-bottom: 1px solid #1a1a1a; 
+    position: sticky; 
+    top: 0; 
+    z-index: 2000; 
+    backdrop-filter: blur(15px); 
+}
+
+.logo { 
+    display: flex; 
+    align-items: center; 
+    gap: 10px; 
+    font-size: 1.2rem;
+    font-weight: 800; 
+    cursor: pointer; 
+    letter-spacing: 1px;
+}
+
+.header-logo { height: 38px; filter: drop-shadow(0 0 8px var(--gold-dark)); }
+.logo span { color: var(--gold); }
+
+.nav-links { display: flex; gap: 15px; }
+.nav-btn { 
+    cursor: pointer; 
+    color: #aaaaaa; 
+    font-size: 0.9rem; 
+    padding: 8px 20px; 
+    border-radius: 25px; 
+    border: 1px solid transparent;
+    transition: all 0.3s ease; 
+}
+
+.nav-btn:hover { 
+    color: var(--gold); 
+    border-color: var(--gold); 
+    background: rgba(255, 204, 0, 0.05);
+}
+
+/* =========================================
+   WELCOME SECTION (PERFECTLY CENTERED)
+   ========================================= */
+.welcome-box { 
+    text-align: center; 
+    padding: 80px 5% 40px; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    animation: fadeInDown 1s ease-out;
+}
+
+.welcome-box h1 { 
+    font-size: 3.5rem; 
+    color: var(--gold); 
+    margin-bottom: 20px; 
+    text-shadow: 0 0 20px rgba(255, 204, 0, 0.2);
+    font-weight: 800;
+}
+
+.welcome-box p { 
+    color: var(--text-muted); 
+    font-size: 1.2rem; 
+    line-height: 1.9; 
+    max-width: 900px; 
+}
+
+/* =========================================
+   SEARCH BAR (CENTERED & STYLED)
+   ========================================= */
+.controls {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 60px;
+}
+
+.search-box-wrapper { 
+    position: relative; 
+    width: 90%; 
+    max-width: 650px; 
+    z-index: 10; 
+}
+
+#search-input { 
+    width: 100%; 
+    padding: 20px 65px; 
+    border-radius: 20px; 
+    background: #0d0d0d; 
+    border: 1px solid #222; 
+    color: white; 
+    outline: none; 
+    font-size: 1.1rem;
+    transition: all 0.4s ease; 
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+}
+
+#search-input:focus { 
+    border-color: var(--gold); 
+    box-shadow: 0 0 25px rgba(255, 204, 0, 0.15); 
+}
+
+.search-icon { 
+    position: absolute; 
+    left: 25px; 
+    top: 50%; 
+    transform: translateY(-50%); 
+    color: var(--gold); 
+    font-size: 1.2rem;
+}
+
+/* =========================================
+   WALLPAPER GRID & ANIMATIONS
+   ========================================= */
+#wallpaper-grid { 
+    display: grid; 
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
+    gap: 30px; 
+    padding: 0 5% 100px; 
+}
+
+.wallpaper-card { 
+    background: var(--card-bg); 
+    border-radius: 25px; 
+    overflow: hidden; 
+    border: 1px solid #1a1a1a; 
+    opacity: 0; 
+    transform: translateY(40px);
+    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+}
+
+.wallpaper-card.visible { 
+    opacity: 1; 
+    transform: translateY(0); 
+}
+
+.wallpaper-card:hover {
+    border-color: var(--gold-dark);
+    transform: translateY(-10px);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.8);
+}
+
+.wallpaper-card img { 
+    width: 100%; 
+    height: 420px; 
+    object-fit: cover; 
+    cursor: pointer; 
+    transition: transform 0.6s ease;
+}
+
+.wallpaper-card:hover img {
+    transform: scale(1.04);
+}
+
+.btn-group { 
+    display: flex; 
+    gap: 10px; 
+    padding: 15px; 
+    background: #050505; 
+    position: relative;
+    z-index: 2;
+}
+
+.card-btn { 
+    flex: 1; 
+    padding: 14px; 
+    border-radius: 12px; 
+    border: none; 
+    font-weight: 800; 
+    cursor: pointer; 
+    font-size: 0.8rem; 
+    letter-spacing: 1px;
+    transition: all 0.3s ease; 
+}
+
+.p-btn { background: #151515; color: #888; border: 1px solid #222; }
+.p-btn:hover { color: white; border-color: #555; }
+.d-btn { background: var(--gold); color: black; }
+.d-btn:hover { box-shadow: 0 0 20px rgba(255, 204, 0, 0.4); }
+
+/* =========================================
+   MODALS SYSTEM (PREVIEW, AD, SUCCESS, ARTICLES)
+   ========================================= */
+.modal { 
+    display: none; 
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%; 
+    align-items: center; 
+    justify-content: center; 
+    z-index: 9999; 
+}
+
+.modal-backdrop { 
+    position: absolute; 
+    width: 100%; 
+    height: 100%; 
+    background: rgba(0,0,0,0.96); 
+    backdrop-filter: blur(20px); 
+}
+
+/* --- 1. PREVIEW PHONE (PERFECTLY SIZED) --- */
+.preview-container { 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    gap: 25px; 
+    z-index: 10000; 
+    animation: zoomIn 0.4s ease;
+}
+
+.phone-frame { 
+    width: 310px; 
+    height: 640px; 
+    background: #000; 
+    border: 12px solid #1a1a1a; 
+    border-radius: 50px; 
+    position: relative; 
+    overflow: hidden; 
+    box-shadow: 0 0 100px rgba(255, 204, 0, 0.15); 
+}
+
+.phone-screen { height: 100%; width: 100%; position: relative; }
+.phone-screen img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.phone-lockscreen-overlay { position: absolute; top: 12%; width: 100%; text-align: center; color: white; text-shadow: 0 0 25px black; }
+.time { font-size: 5rem; font-weight: 200; line-height: 1; }
+.date { font-size: 1rem; opacity: 0.9; margin-top: 5px; }
+
+/* زر الخروج (EXIT BUTTON) */
+.exit-btn { 
     background: #111; 
-    color: #ffcc00; /* جعل النص أصفر لكل القوائم */
-    border: 1px solid #ffcc0044; /* حدود صفراء خفيفة */
-    padding: 8px 18px; border-radius: 30px; cursor: pointer; 
-    transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
-    opacity: 0; animation: fadeSlide 0.5s ease-out forwards;
+    color: white; 
+    border: 1px solid #333; 
+    padding: 15px 40px; 
+    border-radius: 30px; 
+    cursor: pointer; 
+    font-weight: 700; 
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+    transition: all 0.3s ease; 
 }
-@keyframes fadeSlide {
-    from { opacity: 0; transform: translateX(-20px) scale(0.9); }
-    to { opacity: 1; transform: translateX(0) scale(1); }
+.exit-btn:hover { background: var(--gold); color: black; border-color: var(--gold); }
+
+/* --- 2. AD MODAL --- */
+.ad-card { 
+    background: #080808; 
+    padding: 50px; 
+    border-radius: 30px; 
+    border: 2px solid var(--gold-dark); 
+    text-align: center; 
+    width: 90%; 
+    max-width: 480px; 
+    z-index: 10000;
+    position: relative;
+    overflow: hidden;
+}
+.scanner-line { position: absolute; top: 0; left: 0; width: 100%; height: 6px; background: var(--gold); box-shadow: 0 0 20px var(--gold); animation: scan 2s infinite linear; }
+.ad-icon { font-size: 3.5rem; color: var(--gold); margin-bottom: 20px; }
+.progress-container { width: 100%; height: 8px; background: #1a1a1a; margin: 25px 0; border-radius: 10px; overflow: hidden; }
+.progress-bar { width: 0%; height: 100%; background: var(--gold); transition: 1s linear; box-shadow: 0 0 10px var(--gold); }
+
+/* --- 3. SUCCESS MODAL (PREMIUM & BEAUTIFUL) --- */
+.success-card { 
+    background: radial-gradient(circle at top, #1a1500 0%, #080808 60%); 
+    padding: 60px 40px; 
+    border-radius: 40px; 
+    border: 2px solid var(--gold); 
+    text-align: center; 
+    width: 90%; 
+    max-width: 550px; 
+    z-index: 10001; 
+    position: relative;
+    box-shadow: 0 0 80px rgba(255, 204, 0, 0.2);
+    animation: zoomIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-.cat-btn:hover { background: #222; transform: scale(1.05); border-color: #ffcc00; box-shadow: 0 0 10px #ffcc0044; }
-
-/* تمييز القسم النشط (مثل الكل) باللون الأصفر الكامل */
-.cat-btn.active { 
-    background: #ffcc00 !important; 
-    color: black !important; 
-    border-color: white !important; 
-    transform: scale(1.15); 
-    box-shadow: 0 0 20px rgba(255, 204, 0, 0.6); 
-    font-weight: bold;
+.success-glow {
+    position: absolute;
+    top: -50px; left: 50%;
+    transform: translateX(-50%);
+    width: 200px; height: 200px;
+    background: var(--gold);
+    filter: blur(100px);
+    opacity: 0.15;
+    pointer-events: none;
 }
 
-.search-container { text-align: center; margin-bottom: 40px; }
-#search-input { width: 85%; max-width: 500px; padding: 14px 22px; border-radius: 40px; border: 1px solid #333; background: #111; color: white; outline: none; }
+.crown-icon { font-size: 4.5rem; color: var(--gold); margin-bottom: 25px; animation: float 3s ease-in-out infinite; text-shadow: 0 0 30px rgba(255, 204, 0, 0.5); }
+.success-title { color: white; font-size: 2.5rem; font-weight: 800; margin-bottom: 15px; }
+.success-text { color: #ccc; font-size: 1.1rem; line-height: 1.6; }
+.rare-text { color: var(--gold); font-weight: 700; font-size: 1rem; margin-top: 15px; background: rgba(255,204,0,0.1); display: inline-block; padding: 5px 15px; border-radius: 20px; border: 1px solid rgba(255,204,0,0.3); }
+.enjoy-text { color: white; font-size: 1.8rem; margin-top: 30px; font-family: 'Courier New', Courier, monospace; letter-spacing: 2px; }
 
-#wallpaper-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; padding: 0 5% 60px; }
-.wallpaper-card { background: #0f0f0f; border-radius: 15px; overflow: hidden; transition: 0.4s; border: 1px solid #222; }
-.wallpaper-card img { width: 100%; height: 450px; object-fit: cover; cursor: pointer; transition: 0.5s; }
-.wallpaper-card:hover { border-color: #ffcc00; transform: translateY(-10px); }
-
-/* زر التحميل والنبض الذهبي */
-.download-btn { 
-    background: #ffcc00; color: black; padding: 10px 20px; border-radius: 8px; 
-    text-decoration: none; font-weight: bold; flex: 1; font-size: 0.85rem;
-    transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    animation: pulseGlow 2s infinite;
+.glow-btn-success { 
+    background: var(--gold); 
+    color: black; 
+    border: none; 
+    padding: 16px 50px; 
+    border-radius: 40px; 
+    font-weight: 800; 
+    font-size: 1.1rem;
+    cursor: pointer; 
+    margin-top: 35px; 
+    transition: all 0.3s ease; 
+    box-shadow: 0 10px 30px rgba(255, 204, 0, 0.3); 
 }
-@keyframes pulseGlow {
-    0% { box-shadow: 0 0 0 0 rgba(255, 204, 0, 0.4); }
-    70% { box-shadow: 0 0 0 12px rgba(255, 204, 0, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(255, 204, 0, 0); }
+.glow-btn-success:hover { transform: translateY(-5px); box-shadow: 0 15px 40px rgba(255, 204, 0, 0.6); }
+
+/* --- 4. ARTICLE CARD (LONG PRO TEXT) --- */
+.article-card { 
+    background: #080808; 
+    padding: 60px; 
+    border-radius: 30px; 
+    border: 1px solid #222; 
+    width: 95%; 
+    max-width: 900px; 
+    max-height: 85vh; 
+    overflow-y: auto; 
+    z-index: 10000; 
+    color: white; 
+    animation: fadeInUp 0.5s ease;
 }
-.download-btn:hover { transform: scale(1.1); filter: brightness(1.2); }
+.article-card h2 { color: var(--gold); font-size: 2.5rem; margin-bottom: 30px; border-bottom: 2px solid #1a1a1a; padding-bottom: 15px; }
+.article-card h3 { color: white; font-size: 1.5rem; margin: 30px 0 15px; }
+.article-card p { color: #aaa; line-height: 2; margin-bottom: 20px; font-size: 1.1rem; text-align: justify; }
 
-/* إعادة حركة زر المشاركة */
-.share-btn { 
-    background: #222; color: #ffcc00; border: 1px solid #ffcc00; 
-    padding: 10px 20px; border-radius: 8px; cursor: pointer; 
-    font-size: 0.85rem; transition: 0.3s ease-in-out;
+/* =========================================
+   KEYFRAMES (ANIMATIONS)
+   ========================================= */
+@keyframes fadeInDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes zoomIn { from { opacity: 0; transform: scale(0.85); } to { opacity: 1; transform: scale(1); } }
+@keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
+@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+
+/* =========================================
+   MEDIA QUERIES (MOBILE RESPONSIVE)
+   ========================================= */
+@media (max-width: 768px) { 
+    #wallpaper-grid { grid-template-columns: repeat(2, 1fr); gap: 15px; } 
+    .wallpaper-card img { height: 280px; }
+    .phone-frame { width: 270px; height: 560px; } 
+    .welcome-box h1 { font-size: 2.2rem; }
+    .article-card { padding: 30px; }
+    .success-card { padding: 40px 20px; }
 }
-.share-btn:hover { background: #ffcc00; color: black; transform: scale(1.05); }
-.share-btn:active { transform: scale(0.9); }
-
-.modal { display: none; position: fixed; z-index: 1000; padding: 50px 0; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.96); align-items: center; justify-content: center; }
-.info-content { background: #111; padding: 40px; border: 1px solid #ffcc00; color: #ccc; max-width: 600px; width: 90%; border-radius: 20px; text-align: center; }
-.close-modal { position: absolute; top: 20px; right: 30px; color: #fff; font-size: 45px; cursor: pointer; }
-
-#scroll-top { display: none; position: fixed; bottom: 30px; right: 30px; background: #ffcc00; border-radius: 50%; padding: 15px; border: none; z-index: 99; }
-#toast-container { position: fixed; bottom: -80px; left: 50%; transform: translateX(-50%); background: #ffcc00; color: #000; padding: 12px 30px; border-radius: 40px; font-weight: bold; transition: 0.5s; z-index: 1000; }
-#toast-container.show { bottom: 40px; }
-
-footer { text-align: center; padding: 50px; color: #444; border-top: 1px solid #111; }
