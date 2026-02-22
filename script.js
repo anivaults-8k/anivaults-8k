@@ -195,3 +195,23 @@ document.addEventListener('mousemove', (e) => {
 
 // Initialize UI
 renderUI();
+// ==========================================
+// 6. SECURITY: PREVENT IMAGE THEFT
+// ==========================================
+
+// منع الضغط بالزر الأيمن للماوس في كامل الموقع
+document.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+});
+
+// منع سحب وإفلات الصور بالماوس
+document.addEventListener('dragstart', function(e) {
+    if (e.target.nodeName === 'IMG') {
+        e.preventDefault();
+    }
+});
+
+// منع تحديد النصوص (اختياري لزيادة الحماية)
+document.addEventListener('selectstart', function(e) {
+    e.preventDefault();
+});
